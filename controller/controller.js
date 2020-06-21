@@ -1,6 +1,8 @@
 const Product=require('../model/model')
 const assert= require('assert')
 const joi=require('@hapi/joi')
+const jwt= require('jsonwebtoken')
+const TOKEN_SECRET='shajahsjahsjahs'
 
 const bcrypt= require('bcryptjs')
 
@@ -94,7 +96,9 @@ module.exports={
                  }
                  else{
                      if(isMatch){
-                         res.send('Login Success')
+                         const token=jwt.sign({_id:data._id},TOKEN_SECRET)
+                         res.header('token').send(token)
+                       
                      }
                      else{
                          res.send('Login Failed')
@@ -109,6 +113,11 @@ module.exports={
         }).catch(err=>{
             res.send('Error')
         })
+    },
+
+    posts:(req,res)=>{
+        res.send({posts:[{name:'post1',post:'Hey This is post one'}]})
+
     }
 
 }
